@@ -9,11 +9,12 @@ set -u
 
 # Get the full path of the writer and finder applications using 'which'
 WRITERAPP=$(which writer)
-FINDERAPP=$(which finder)
+FINDERAPP=$(which finder.sh)
 NUMFILES=10
 WRITESTR=AELD_IS_FUN
 WRITEDIR=/tmp/aeld-data
-username=$(cat conf/username.txt)
+CONFDIR=/etc/finder-app/conf
+username=$(cat "${CONFDIR}/username.txt")
 OUTPUTFILE=/tmp/assignment4-result.txt
 
 
@@ -39,7 +40,7 @@ echo "Writing ${NUMFILES} files containing string ${WRITESTR} to ${WRITEDIR}"
 rm -rf "${WRITEDIR}"
 
 # create $WRITEDIR if not assignment1
-assignment=`cat conf/assignment.txt`
+assignment=`cat "${CONFDIR}/assignment.txt"`
 
 if [ $assignment != 'assignment1' ]
 then
