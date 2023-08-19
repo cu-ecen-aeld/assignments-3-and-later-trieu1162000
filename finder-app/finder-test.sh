@@ -5,10 +5,17 @@
 set -e
 set -u
 
+
+
+# Get the full path of the writer and finder applications using 'which'
+WRITERAPP=$(which writer)
+FINDERAPP=$(which finder)
 NUMFILES=10
 WRITESTR=AELD_IS_FUN
 WRITEDIR=/tmp/aeld-data
 username=$(cat conf/username.txt)
+OUTPUTFILE=/tmp/assignment4-result.txt
+
 
 if [ $# -lt 3 ]
 then
@@ -54,11 +61,11 @@ fi
 
 for i in $( seq 1 $NUMFILES)
 do
-	./writer "$WRITEDIR/${username}$i.txt" "$WRITESTR"
+	$WRITERAPP "$WRITEDIR/${username}$i.txt" "$WRITESTR"
 done
 
-OUTPUTSTRING=$(./finder.sh "$WRITEDIR" "$WRITESTR")
-
+OUTPUTSTRING=$($FINDERAPP "$WRITEDIR" "$WRITESTR")
+echo "$OUTPUTSTRING" > "$OUTPUTFILE"
 # remove temporary directories
 rm -rf /tmp/aeld-data
 
@@ -69,6 +76,5 @@ if [ $? -eq 0 ]; then
 	exit 0
 else
 	echo "failed: expected  ${MATCHSTR} in ${OUTPUTSTRING} but instead found"
-	echo "TP1"
 	exit 1
 fi
