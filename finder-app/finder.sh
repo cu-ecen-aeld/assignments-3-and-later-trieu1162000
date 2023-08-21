@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 # Check if the required arguments are provided
 if [ $# -ne 2 ]; then
@@ -17,13 +17,13 @@ fi
 
 # Function to count matching lines in a file
 count_matching_lines() {
-    local file="$1"
-    local count=0
+    file="$1"
+    count=0
 
     while IFS= read -r line; do
-        if [[ $line == *"$searchstr"* ]]; then
-            ((count++))
-        fi
+        case $line in
+            *"$searchstr"*) count=$((count + 1));;
+        esac
     done < "$file"
 
     echo "$count"
@@ -31,20 +31,20 @@ count_matching_lines() {
 
 # Recursive function to process directory
 process_directory() {
-    local dir="$1"
-    local total_files=0
-    local total_matching_lines=0
+    dir="$1"
+    total_files=0
+    total_matching_lines=0
 
     # Loop through files and subdirectories in the directory
     for item in "$dir"/*; do
         if [ -f "$item" ]; then
-            ((total_files++))
+            total_files=$((total_files + 1))
             matching_lines=$(count_matching_lines "$item")
-            ((total_matching_lines += matching_lines))
+            total_matching_lines=$((total_matching_lines + matching_lines))
         elif [ -d "$item" ]; then
             sub_totals=$(process_directory "$item")
-            total_files=$((total_files + sub_totals[0]))
-            total_matching_lines=$((total_matching_lines + sub_totals[1]))
+            total_files=$((total_files + $(echo "$sub_totals" | cut -d' ' -f1)))
+            total_matching_lines=$((total_matching_lines + $(echo "$sub_totals" | cut -d' ' -f2)))
         fi
     done
 
@@ -52,8 +52,8 @@ process_directory() {
 }
 
 # Main script execution starts here
-result=($(process_directory "$filesdir"))
-total_files="${result[0]}"
-total_matching_lines="${result[1]}"
+result=$(process_directory "$filesdir")
+total_files=$(echo "$result" | cut -d' ' -f1)
+total_matching_lines=$(echo "$result" | cut -d' ' -f2)
 
 echo "The number of files are $total_files and the number of matching lines are $total_matching_lines"
