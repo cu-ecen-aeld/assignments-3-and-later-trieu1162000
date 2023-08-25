@@ -1,7 +1,7 @@
-#!/bin/bash
+#!/bin/sh
 
 # Path to your aesdsocket binary
-AESDSOCKET_BIN="./aesdsocket"
+AESDSOCKET_BIN="/usr/bin/aesdsocket"
 
 start() {
     echo "Starting aesdsocket daemon..."
