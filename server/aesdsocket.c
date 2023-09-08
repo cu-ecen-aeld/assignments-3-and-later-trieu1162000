@@ -354,6 +354,8 @@ void *client_handler(void *arg)
     free(buffer);
 
     syslog(LOG_INFO, "Closed connection from %s", client_ip_string);
+    
+    return NULL;
 }
 
 void *write_time_to_file_handler(void *arg) {
