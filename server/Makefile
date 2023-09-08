@@ -3,17 +3,17 @@ CC := gcc
 ifeq ($(CROSS_COMPILE),aarch64-none-linux-gnu-)
     CC := $(CROSS_COMPILE)$(CC)
 endif
-CFLAGS := -Wall -Werror
+CFLAGS := -g -Werror
 DEPS := $(wildcard *.c)
 OBJ := $(DEPS:.c=.o)
 
 all: aesdsocket
 
 %.o: %.c $(DEPS)
-	$(CC) -c -o $@ $< $(CFLAGS)
+	$(CC) -c -o $@ $< $(CFLAGS) 
 
 aesdsocket: $(OBJ)
-	$(CC) -o $@ $< $(CFLAGS) 
+	$(CC) -o $@ $< $(CFLAGS) -pthread 
 
 default: all
 
