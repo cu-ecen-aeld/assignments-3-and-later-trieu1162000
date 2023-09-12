@@ -1,9 +1,8 @@
-CROSS_COMPILE :=
-CC := gcc
-ifeq ($(CROSS_COMPILE),aarch64-none-linux-gnu-)
-    CC := $(CROSS_COMPILE)$(CC)
-endif
-CFLAGS := -Wall -Werror
+CC ?= $(CROSS_COMPILE)gcc
+TARGET ?= aesdsocket
+CFLAGS ?= -g -Wall -Werror
+LDFLAGS ?= -lpthread
+
 DEPS := $(wildcard *.c)
 OBJ := $(DEPS:.c=.o)
 
@@ -13,7 +12,7 @@ all: aesdsocket
 	$(CC) -c -o $@ $< $(CFLAGS)
 
 aesdsocket: $(OBJ)
-	$(CC) -o $@ $< $(CFLAGS) 
+	$(CC) -o $@ $< $(CFLAGS) $(LDFLAGS)
 
 default: all
 
